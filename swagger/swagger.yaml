@@ -1,0 +1,289 @@
+consumes:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+definitions:
+  Account:
+    description: Media type of account!!! (default view)
+    example:
+      email: me@goa.design:)
+      id: 1
+      name: testName
+      password: testPassword
+      username: testUsername
+    properties:
+      email:
+        description: Email of account
+        example: me@goa.design:)
+        format: email
+        type: string
+      id:
+        description: id of account
+        example: 1
+        format: int64
+        type: integer
+      name:
+        description: Name of account
+        example: testName
+        type: string
+      password:
+        description: Password of account
+        example: testPassword
+        type: string
+      username:
+        description: Username of account
+        example: testUsername
+        type: string
+    required:
+    - id
+    - name
+    - username
+    - email
+    - password
+    title: 'Mediatype identifier: application/vnd.account+json; view=default'
+    type: object
+  CreateUserAccountPayload:
+    example:
+      email: me@goa.design:)
+      name: testName
+      password: testPassword
+      username: testUsername
+    properties:
+      email:
+        description: Email of account
+        example: me@goa.design:)
+        format: email
+        type: string
+      name:
+        description: Name of account
+        example: testName
+        type: string
+      password:
+        description: Password of account
+        example: testPassword
+        type: string
+      username:
+        description: Username of account
+        example: testUsername
+        type: string
+    required:
+    - name
+    - username
+    - email
+    - password
+    title: CreateUserAccountPayload
+    type: object
+  UpdateUserAccountPayload:
+    example:
+      email: me@goa.design:)
+      name: testName
+      password: testPassword
+      username: testUsername
+    properties:
+      email:
+        description: Email of account
+        example: me@goa.design:)
+        format: email
+        type: string
+      name:
+        description: Name of account
+        example: testName
+        type: string
+      password:
+        description: Password of account
+        example: testPassword
+        type: string
+      username:
+        description: Username of account
+        example: testUsername
+        type: string
+    required:
+    - name
+    - username
+    - email
+    - password
+    title: UpdateUserAccountPayload
+    type: object
+  error:
+    description: Error response media type (default view)
+    example:
+      code: invalid_value
+      detail: Value of ID must be an integer
+      id: 3F1FKVRR
+      meta:
+        timestamp: 1.458609e+09
+      status: "400"
+    properties:
+      code:
+        description: an application-specific error code, expressed as a string value.
+        example: invalid_value
+        type: string
+      detail:
+        description: a human-readable explanation specific to this occurrence of the
+          problem.
+        example: Value of ID must be an integer
+        type: string
+      id:
+        description: a unique identifier for this particular occurrence of the problem.
+        example: 3F1FKVRR
+        type: string
+      meta:
+        additionalProperties: true
+        description: a meta object containing non-standard meta-information about
+          the error.
+        example:
+          timestamp: 1.458609e+09
+        type: object
+      status:
+        description: the HTTP status code applicable to this problem, expressed as
+          a string value.
+        example: "400"
+        type: string
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+host: localhost:8080
+info:
+  description: Goa user description
+  title: Goa user
+  version: ""
+paths:
+  /accounts:
+    post:
+      description: Create new account
+      operationId: account#CreateUser
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateUserAccountPayload'
+      produces:
+      - application/vnd.account+json
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Account'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: CreateUser account
+      tags:
+      - account
+  /accounts/{accountID}:
+    delete:
+      operationId: account#DeleteUser
+      parameters:
+      - description: Account ID
+        in: path
+        name: accountID
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+      schemes:
+      - http
+      summary: DeleteUser account
+      tags:
+      - account
+    get:
+      description: Get account by ID
+      operationId: account#GetUser
+      parameters:
+      - description: Account ID
+        in: path
+        minimum: 1
+        name: accountID
+        required: true
+        type: integer
+      produces:
+      - application/vnd.account+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Account'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+      schemes:
+      - http
+      summary: GetUser account
+      tags:
+      - account
+    put:
+      description: change account attributes
+      operationId: account#UpdateUser
+      parameters:
+      - description: Account ID
+        in: path
+        name: accountID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateUserAccountPayload'
+      produces:
+      - application/vnd.account+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Account'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: UpdateUser account
+      tags:
+      - account
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+responses:
+  NoContent:
+    description: No Content
+  NotFound:
+    description: Not Found
+  OK:
+    description: OK
+    schema:
+      $ref: '#/definitions/Account'
+schemes:
+- http
+swagger: "2.0"

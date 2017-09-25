@@ -199,6 +199,10 @@ paths:
             $ref: '#/definitions/error'
         "404":
           description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
       schemes:
       - http
       summary: DeleteUser account
@@ -222,12 +226,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Account'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
       schemes:
       - http
       summary: GetUser account

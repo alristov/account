@@ -24,13 +24,6 @@ func TestGetUser(t *testing.T) {
 
 }
 
-func TestDeleteUser(t *testing.T) {
-	var db Repository = NewDB()
-
-	db.DeleteUser(1)
-
-}
-
 func TestUpdateUser(t *testing.T) {
 	var db Repository = NewDB()
 	account := db.UpdateUser(1, "Name", "Username", "UserPassword", "UserEmail")
@@ -38,5 +31,12 @@ func TestUpdateUser(t *testing.T) {
 	if account.id != 1 {
 		t.Fatal("ID should be 1")
 	}
+
+}
+
+func TestDeleteUser(t *testing.T) {
+	var db Repository = NewDB()
+
+	db.DeleteUser(1)
 
 }

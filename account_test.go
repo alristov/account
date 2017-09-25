@@ -4,25 +4,60 @@ import (
 	"context"
 	"testing"
 
-	"account/app"
-	"account/app/test"
-	"account/db"
+	"github.com/account/app"
+	"github.com/account/app/test"
+	"github.com/account/db"
 
 	"github.com/goadesign/goa"
 )
 
-var payload = &app.CreateUserAccountPayload{
+var payloadCreate = &app.CreateUserAccountPayload{
 	Email:    "EmailTest@test.com",
 	Name:     "NameTest",
 	Username: "UsernameTest",
 	Password: "PasswordTest",
 }
 
-var payloadInternalErr = &app.CreateUserAccountPayload {
+var payloadUpdate = &app.UpdateUserAccountPayload{
+	Email:    "EmailTest@test.com",
+	Name:     "NameTest",
+	Username: "UsernameTest",
+	Password: "PasswordTest",
+}
+
+var payloadBadRequestUpdate = &app.UpdateUserAccountPayload{
+	Email:    "EmailTest@test.com",
+	Name:     "NameTest",
+	Username: "UsernameTest",
+	Password: "PasswordTest",
+}
+
+var payloadNotFound = &app.UpdateUserAccountPayload{
+	Email:    "EmailTest@test.com",
+	Name:     "NameTest",
+	Username: "UsernameTest",
+	Password: "PasswordTest",
+}
+
+var payloadOK = &app.UpdateUserAccountPayload{
+	Email:    "EmailTest@test.com",
+	Name:     "NameTest",
+	Username: "UsernameTest",
+	Password: "PasswordTest",
+}
+
+var payloadInternalErrUpdate = &app.UpdateUserAccountPayload{
+	Email:    "EmailTest@test.com",
+	Name:     "NameTest",
+	Username: "UsernameTest",
+	Password: "PasswordTest",
+}
+
+var payloadInternalErrCreate = &app.CreateUserAccountPayload{
 	Email:    "EmailTest@test.com",
 	Name:     "internal-error",
 	Username: "UsernameTest",
-	Password: "PasswordTest",	
+	Password: "PasswordTest",
 }
 
 var (
@@ -31,18 +66,89 @@ var (
 	ctrl     = NewAccountController(service, database)
 )
 
-func TestCreateUserAccountCreated(t *testing.T) {
+// func TestCreateUserAccountCreated(t *testing.T) {
 
-	_, account := test.CreateUserAccountCreated(t, context.Background(), service, ctrl, payload)
+// 	_, account := test.CreateUserAccountCreated(t, context.Background(), service, ctrl, payload)
+
+// 	if account == nil {
+// 		t.Fatal("Nil account!!!")
+// 	}
+
+// }
+
+// func TestCreateUserAccountInternalServerError(t *testing.T) {
+// 	_, err := test.CreateUserAccountInternalServerError(t, context.Background(), service, ctrl, payloadInternalErr)
+
+// 	if err == nil {
+// 		t.Fatal("Nil error")
+// 	}
+
+// }
+
+// func TestCreateUserAccountBadRequest(t *testing.T) {
+// 	_, err := test.CreateUserAccountBadRequest(t, context.Background(), service, ctrl, payloadBadRequest)
+
+// 	if err == nil {
+// 		t.Fatal("Nil error")
+// 	}
+
+// }
+
+func TestGetUserAccountOK(t *testing.T) {
+	_, account := test.GetUserAccountOK(t, context.Background(), service, ctrl, 1)
 
 	if account == nil {
-		t.Fatal("Nil account!!!")
+		t.Fatal("Error, not OK")
 	}
 
+}
+
+func TestGetUserAccountNotFound(t *testing.T) {
+	test.GetUserAccountNotFound(t, context.Background(), service, ctrl, 2)
+}
+
+func TestDeleteUserAccountNoContent(t *testing.T) {
+	test.DeleteUserAccountNoContent(t, context.Background(), service, ctrl, 1)
+}
+func TestDeleteUserAccountNotFound(t *testing.T) {
+	test.DeleteUserAccountNotFound(t, context.Background(), service, ctrl, 1)
+}
+func TestDeleteUserAccountBadRequest(t *testing.T) {
+	_, err := test.DeleteUserAccountBadRequest(t, context.Background(), service, ctrl, 1)
+
+	if err == nil {
+		t.Fatal("Error, can't delete")
+	}
 
 }
 
-func TestCreateUserAccountInternalServerError(t *testing.T){
-	_, _ account := test.CreateUserAccountInternalServerError(t, context.Background(), service, ctrl, payloadInternalErr)
+func TestUpdateUserAccountNotFound(t *testing.T) {
+	test.UpdateUserAccountNotFound(t, context.Background(), service, ctrl, 2, payloadUpdate)
+}
+
+func TestUpdateUserAccountOK(t *testing.T) {
+	_, account := test.UpdateUserAccountOK(t, context.Background(), service, ctrl, 1, payloadOK)
+
+	if account == nil {
+		t.Fatal("Nil error")
+	}
 
 }
+
+func TestUpdateUserAccountBadRequest(t *testing.T) {
+	_, err := test.UpdateUserAccountBadRequest(t, context.Background(), service, ctrl, 1, payloadBadRequestUpdate)
+
+	if err == nil {
+		t.Fatal("Error nil")
+	}
+
+}
+
+// func TestUpdateUserAccountInternalServerError(t *testing.T) {
+// 	_, err := test.UpdateUserAccountInternalServerError(t, context.Background(), service, ctrl, 1, payloadInternalErrUpdate)
+
+// 	if err == nil {
+// 		t.Fatal("Nil error")
+// 	}
+
+// }

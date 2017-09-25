@@ -46,10 +46,45 @@ func (c *AccountController) GetUser(ctx *app.GetUserAccountContext) error {
 
 	Account, err := c.Repository.GetUser(ctx.AccountID)
 
-	fmt.Println(Account, err)
+	if err != nil {
+		e := err.(*goa.ErrorResponse)
+
+		switch e.Status {
+		case 404:
+			return ctx.NotFound()
+		default:
+			return ctx.InternalServerError(err)
+		}
+	}
+
+	res := &app.Account{
+		ID:       Account.ID,
+		Name:     Account.Name,
+		Username: Account.Username,
+		Email:    Account.Email,
+		Password: Account.Password,
+	}
+
+	return ctx.OK(res)
+}
+
+func (c *AccountController) UpdateUser(ctx *app.UpdateUserAccountContext) error {
+
+	Account, err := c.Repository.UpdateUser(ctx.AccountID, ctx.Payload.Name, ctx.Payload.Username, ctx.Payload.Password, ctx.Payload.Email)
 
 	if err != nil {
-		ctx.NotFound()
+		ctx.InternalServerError(err)
+	}
+
+	if err != nil {
+		e := err.(*goa.ErrorResponse)
+
+		switch e.Status {
+		case 404:
+			return ctx.NotFound()
+		default:
+			return ctx.InternalServerError(err)
+		}
 	}
 
 	res := &app.Account{
@@ -66,26 +101,18 @@ func (c *AccountController) GetUser(ctx *app.GetUserAccountContext) error {
 func (c *AccountController) DeleteUser(ctx *app.DeleteUserAccountContext) error {
 	err := c.Repository.DeleteUser(ctx.AccountID)
 
-	fmt.Println(err)
-
-	return nil
-}
-
-func (c *AccountController) UpdateUser(ctx *app.UpdateUserAccountContext) error {
-
-	Account, err := c.Repository.UpdateUser(ctx.AccountID, ctx.Payload.Name, ctx.Payload.Username, ctx.Payload.Password, ctx.Payload.Email)
-
 	if err != nil {
-		ctx.InternalServerError(err)
+		e := err.(*goa.ErrorResponse)
+
+		switch e.Status {
+		case 204:
+			return ctx.NoContent()
+		case 404:
+			return ctx.NotFound()
+		default:
+			return ctx.InternalServerError(err)
+		}
 	}
 
-	res := &app.Account{
-		ID:       Account.ID,
-		Name:     Account.Name,
-		Username: Account.Username,
-		Email:    Account.Email,
-		Password: Account.Password,
-	}
-
-	return ctx.OK(res)
+	return ctx.NoContent()
 }

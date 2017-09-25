@@ -4,8 +4,8 @@
 //
 // Command:
 // $ goagen
-// --design=account/design
-// --out=$(GOPATH)/src/account
+// --design=github.com/account/design
+// --out=$(GOPATH)/src/github.com/account
 // --version=v1.3.0
 
 package app
@@ -186,6 +186,12 @@ func (ctx *DeleteUserAccountContext) NotFound() error {
 	return nil
 }
 
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *DeleteUserAccountContext) InternalServerError(r error) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
 // GetUserAccountContext provides the account GetUser action context.
 type GetUserAccountContext struct {
 	context.Context
@@ -224,16 +230,16 @@ func (ctx *GetUserAccountContext) OK(r *Account) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *GetUserAccountContext) BadRequest(r error) error {
-	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *GetUserAccountContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
 	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *GetUserAccountContext) InternalServerError(r error) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
 // UpdateUserAccountContext provides the account UpdateUser action context.

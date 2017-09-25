@@ -60,7 +60,7 @@ var _ = Resource("account", func() {
 		})
 		Response(OK)
 		Response(NotFound)
-		Response(BadRequest, ErrorMedia)
+		Response(InternalServerError, ErrorMedia)
 	})
 
 	Action("DeleteUser", func() {
@@ -72,6 +72,7 @@ var _ = Resource("account", func() {
 		})
 		Response(NoContent)
 		Response(NotFound)
+		Response(InternalServerError, ErrorMedia)
 		Response(BadRequest, ErrorMedia)
 	})
 

@@ -4,17 +4,17 @@
 //
 // Command:
 // $ goagen
-// --design=account/design
-// --out=$(GOPATH)/src/account
+// --design=github.com/account/design
+// --out=$(GOPATH)/src/github.com/account
 // --version=v1.3.0
 
 package cli
 
 import (
-	"account/client"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/account/client"
 	"github.com/goadesign/goa"
 	goaclient "github.com/goadesign/goa/client"
 	uuid "github.com/goadesign/goa/uuid"

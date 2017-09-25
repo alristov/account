@@ -26,7 +26,7 @@ func NewDB() *DB {
 		ID:       1,
 		Name:     "Account 1",
 		Username: "Account Username 1",
-		Email:    "Account Email 1",
+		Email:    "example@mail.com",
 		Password: "Account Password 1",
 	}
 	return &DB{accounts: map[int]*app.Account{1: account}}
@@ -56,6 +56,14 @@ func (db *DB) CreateUser(name string, username string, password string, email st
 
 func (db *DB) GetUser(id int) (*app.Account, error) {
 
+	if id == 2 {
+		return nil, goa.ErrNotFound("account not found!")
+	}
+
+	if id == 3 {
+		return nil, goa.ErrInternal("internal server error")
+	}
+
 	dbUser := db.accounts[id]
 
 	account := &app.Account{
@@ -70,14 +78,26 @@ func (db *DB) GetUser(id int) (*app.Account, error) {
 
 func (db *DB) DeleteUser(id int) error {
 
+	if id == 2 {
+		return goa.ErrNotFound("account not found!")
+	}
+	if id == 3 {
+		return goa.ErrInternal("internal server error")
+	}
+
 	delete(db.accounts, id)
+
 	return nil
 }
 
 func (db *DB) UpdateUser(id int, name string, username string, password string, email string) (*app.Account, error) {
 
-	if name == "internal-error" {
-		return nil, goa.ErrInternal("Server internal error")
+	if id == 2 {
+		return nil, goa.ErrNotFound("account not found!")
+	}
+
+	if id == 3 {
+		return nil, goa.ErrInternal("internal server error")
 	}
 
 	account := &app.Account{

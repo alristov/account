@@ -4,8 +4,8 @@
 //
 // Command:
 // $ goagen
-// --design=account/design
-// --out=$(GOPATH)/src/account
+// --design=github.com/account/design
+// --out=$(GOPATH)/src/github.com/account
 // --version=v1.3.0
 
 package app

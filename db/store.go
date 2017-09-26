@@ -85,6 +85,10 @@ func (db *DB) DeleteUser(id int) error {
 		return goa.ErrInternal("internal server error")
 	}
 
+	if id == 5 {
+		return goa.ErrBadRequest("invalid ID")
+	}
+
 	delete(db.accounts, id)
 
 	return nil
@@ -98,6 +102,10 @@ func (db *DB) UpdateUser(id int, name string, username string, password string, 
 
 	if id == 3 {
 		return nil, goa.ErrInternal("internal server error")
+	}
+
+	if id == 5 {
+		return nil, goa.ErrBadRequest("invalid ID")
 	}
 
 	account := &app.Account{

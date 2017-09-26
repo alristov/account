@@ -73,13 +73,11 @@ func (c *AccountController) UpdateUser(ctx *app.UpdateUserAccountContext) error 
 	Account, err := c.Repository.UpdateUser(ctx.AccountID, ctx.Payload.Name, ctx.Payload.Username, ctx.Payload.Password, ctx.Payload.Email)
 
 	if err != nil {
-		ctx.InternalServerError(err)
-	}
-
-	if err != nil {
 		e := err.(*goa.ErrorResponse)
 
 		switch e.Status {
+		case 400:
+			return ctx.BadRequest(err)
 		case 404:
 			return ctx.NotFound()
 		default:
@@ -109,6 +107,8 @@ func (c *AccountController) DeleteUser(ctx *app.DeleteUserAccountContext) error 
 			return ctx.NoContent()
 		case 404:
 			return ctx.NotFound()
+		case 400:
+			return ctx.BadRequest(err)
 		default:
 			return ctx.InternalServerError(err)
 		}
